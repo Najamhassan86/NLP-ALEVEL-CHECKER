@@ -1,0 +1,29 @@
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+streamlit==1.31.0
+pydantic==2.6.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# NLP & Embeddings
+sentence-transformers==2.3.1
+transformers==4.37.2
+torch==2.2.0
+
+# Vector Database
+chromadb==0.4.22
+
+# LangChain (minimal usage)
+langchain==0.1.6
+langchain-community==0.0.19
+
+# LLM Integration
+ollama==0.1.6
+
+# Database
+sqlalchemy==2.0.25
+
+# Utilities
+python-multipart==0.0.6
+httpx==0.26.0
