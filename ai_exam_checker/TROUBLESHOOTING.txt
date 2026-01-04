@@ -1,0 +1,243 @@
+================================================================================
+TROUBLESHOOTING GUIDE - AI Exam Checker
+================================================================================
+
+COMMON ISSUES AND SOLUTIONS
+
+================================================================================
+1. SETUP ISSUES
+================================================================================
+
+Problem: "ERROR: Could not find a version that satisfies the requirement..."
+Solution:
+  - You may be using Python 3.13 which is too new
+  - Download Python 3.11 from: https://www.python.org/downloads/
+  - Delete the 'venv' folder
+  - Run setup.bat again with Python 3.11
+
+Problem: "Connection timed out" during pip install
+Solution:
+  - Your network is slow or has firewall issues
+  - Try: pip install --default-timeout=300 <package-name>
+  - Or install packages one by one manually (see below)
+
+Problem: Streamlit installation fails
+Solution:
+  - Streamlit is optional - the backend works without it
+  - Skip it and use the API directly at http://localhost:8000/docs
+  - Or install manually later: pip install streamlit
+
+================================================================================
+2. MANUAL INSTALLATION (if setup.bat fails)
+================================================================================
+
+Run these commands one by one in PowerShell:
+
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Core packages (required)
+pip install --default-timeout=100 numpy pillow
+pip install fastapi uvicorn[standard]
+pip install pydantic pydantic-settings python-dotenv
+pip install torch transformers sentence-transformers
+pip install chromadb ollama
+pip install sqlalchemy httpx requests python-multipart
+
+# UI (optional)
+pip install streamlit
+
+================================================================================
+3. OLLAMA ISSUES
+================================================================================
+
+Problem: "Ollama connection error" or "Model not found"
+Solution:
+  1. Check if Ollama is installed:
+     ollama --version
+
+  2. Check if Ollama is running:
+     - On Windows, check Task Manager for "ollama" process
+     - Or try: ollama list
+
+  3. Pull the model:
+     ollama pull llama3.1:8b
+
+  4. Test Ollama:
+     ollama run llama3.1:8b "Hello"
+     (Press Ctrl+D to exit)
+
+Problem: "Ollama server not responding"
+Solution:
+  - Restart Ollama service
+  - Check Windows Services for "Ollama"
+  - Or reinstall from: https://ollama.com/download
+
+================================================================================
+4. RUNTIME ERRORS
+================================================================================
+
+Problem: "No module named 'app'"
+Solution:
+  - Make sure you're in the project root directory
+  - Activate venv: .\venv\Scripts\Activate.ps1
+  - Verify location: pwd should show .../ai_exam_checker
+
+Problem: "No documents in vector database"
+Solution:
+  - Run: python ingest.py
+  - Check that data/markschemes/ has .md files
+  - Verify output shows "Total documents in vector DB: 20"
+
+Problem: "ModuleNotFoundError: No module named 'chromadb'"
+Solution:
+  - Virtual environment not activated
+  - Run: .\venv\Scripts\Activate.ps1
+  - Or reinstall: pip install chromadb
+
+Problem: "sqlite3.OperationalError: unable to open database file"
+Solution:
+  - Permission issue or invalid path
+  - Check .env file has correct path
+  - Create directory manually: mkdir chroma_db
+
+================================================================================
+5. PYTHON VERSION ISSUES
+================================================================================
+
+Problem: Using Python 3.13 (too new)
+Solution:
+  - Many packages don't support 3.13 yet
+  - Download Python 3.11.x from python.org
+  - Delete venv folder
+  - Run: py -3.11 -m venv venv
+  - Run setup.bat again
+
+Problem: Using Python 3.9 or older (too old)
+Solution:
+  - This project requires Python 3.11+
+  - Download Python 3.11.x from python.org
+  - Install and use that version
+
+Check your Python version:
+  python --version
+
+================================================================================
+6. NETWORK/FIREWALL ISSUES
+================================================================================
+
+Problem: Downloads keep timing out
+Solution:
+  - Increase timeout: pip install --default-timeout=300 <package>
+  - Use a different network
+  - Configure proxy if behind corporate firewall:
+    set HTTP_PROXY=http://your-proxy:port
+    set HTTPS_PROXY=http://your-proxy:port
+
+Problem: "SSL Certificate verify failed"
+Solution:
+  - pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org <package>
+
+================================================================================
+7. MEMORY ISSUES
+================================================================================
+
+Problem: "Out of memory" during model loading
+Solution:
+  - Close other applications
+  - You need at least 8GB RAM
+  - Use a smaller Ollama model:
+    ollama pull mistral
+    Edit .env: OLLAMA_MODEL=mistral
+
+Problem: "Killed" or process crashes during evaluation
+Solution:
+  - Insufficient RAM (need 8GB minimum)
+  - Close browser tabs and other apps
+  - Use smaller model (mistral instead of llama3.1:8b)
+
+================================================================================
+8. WINDOWS-SPECIFIC ISSUES
+================================================================================
+
+Problem: "execution policy" error in PowerShell
+Solution:
+  - Run PowerShell as Administrator
+  - Execute: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  - Try activating venv again
+
+Problem: "Access denied" or "Permission denied"
+Solution:
+  - Run as Administrator
+  - Or move project to a folder you have write access to
+  - Example: C:\Projects\ai_exam_checker
+
+Problem: Long path issues
+Solution:
+  - Move project closer to C:\ drive
+  - Example: C:\ai_exam_checker instead of C:\Users\...\Desktop\uni work\NLP\ai_exam_checker
+
+================================================================================
+9. TESTING ISSUES
+================================================================================
+
+Problem: smoke_test.py fails
+Solution:
+  1. Make sure you ran: python ingest.py
+  2. Make sure Ollama is running: ollama list
+  3. Check individual components:
+     python -c "from app.rag import get_retriever; print(get_retriever().collection.count())"
+
+Problem: API returns 500 errors
+Solution:
+  - Check backend logs for specific error
+  - Verify Ollama is running
+  - Verify ChromaDB has data: python ingest.py
+  - Check .env file settings
+
+================================================================================
+10. QUICK FIXES
+================================================================================
+
+Reset everything and start fresh:
+  1. Delete venv folder
+  2. Delete chroma_db folder
+  3. Delete exam_results.db file
+  4. Delete .env file
+  5. Run setup.bat again
+  6. Run python ingest.py
+  7. Run python smoke_test.py
+
+Verify installation:
+  python -c "import fastapi; print('FastAPI OK')"
+  python -c "import chromadb; print('ChromaDB OK')"
+  python -c "import sentence_transformers; print('Embeddings OK')"
+  python -c "import ollama; print('Ollama OK')"
+  python -c "import streamlit; print('Streamlit OK')"
+
+================================================================================
+11. GETTING HELP
+================================================================================
+
+If none of these solutions work:
+  1. Note your Python version: python --version
+  2. Note your operating system: Windows 10/11
+  3. Copy the EXACT error message
+  4. Check if Ollama is running: ollama --version
+  5. List installed packages: pip list > packages.txt
+
+================================================================================
+12. MINIMAL WORKING SETUP (if all else fails)
+================================================================================
+
+You can run a minimal version without Streamlit:
+
+1. Install only essential packages:
+   pip install fastapi uvicorn chromadb sentence-transformers ollama
+
+2. Skip Streamlit - use API directly at:
+   http://localhost:8000/docs
+
+3. Test with curl or browser
+
+================================================================================

@@ -2,12 +2,23 @@
 
 ## Prerequisites
 - Windows 10/11
-- Python 3.11+ installed
+- **Python 3.11** (RECOMMENDED - 3.13 has compatibility issues)
 - 8GB+ RAM
+- Internet connection for initial setup
+
+**Check your Python version:**
+```powershell
+python --version
+```
+
+**If you don't have Python 3.11:**
+Download from: https://www.python.org/downloads/release/python-31110/
 
 ## Setup (One-Time)
 
 ### 1. Run Automated Setup
+
+**Option A: Automatic (recommended)**
 ```powershell
 # Double-click or run:
 setup.bat
@@ -15,8 +26,16 @@ setup.bat
 
 This will:
 - Create virtual environment
-- Install all Python dependencies (~5-10 minutes)
+- Install all Python dependencies (~10-15 minutes)
 - Create `.env` configuration file
+
+**Option B: If setup.bat fails**
+```powershell
+# Use the manual installer:
+setup-manual.bat
+```
+
+This installs packages one-by-one and pauses between each so you can see what fails.
 
 ### 2. Install Ollama
 

@@ -1,29 +1,36 @@
-# Core Framework
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-streamlit==1.31.0
-pydantic==2.6.0
-pydantic-settings==2.1.0
-python-dotenv==1.0.0
+# IMPORTANT: Install in this order for Python 3.13 compatibility
+# For best results, use Python 3.11 instead of 3.13
 
-# NLP & Embeddings
-sentence-transformers==2.3.1
-transformers==4.37.2
-torch==2.2.0
+# Core dependencies
+numpy
+pillow
+typing-extensions
+
+# Web framework
+fastapi
+uvicorn[standard]
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv
+
+# UI (optional - can skip if issues)
+streamlit
+
+# ML/NLP packages (large downloads)
+torch
+transformers
+sentence-transformers
 
 # Vector Database
-chromadb==0.4.22
-
-# LangChain (minimal usage)
-langchain==0.1.6
-langchain-community==0.0.19
+chromadb
 
 # LLM Integration
-ollama==0.1.6
+ollama
 
 # Database
-sqlalchemy==2.0.25
+sqlalchemy
 
 # Utilities
-python-multipart==0.0.6
-httpx==0.26.0
+python-multipart
+httpx
+requests
